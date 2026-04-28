@@ -126,7 +126,7 @@ body{font-family:'Inter',sans-serif;font-size:13px;background:#0d1b2a;color:#fff
       <div class="topbar-tab" onclick="setRegiao('INTERIOR', this)">INTERIOR</div>
     </div>
     <div class="topbar-center">ENTREGAS JUMA — GRUPO MODENA E SILVA</div>
-    <div style="font-size:10px;color:rgba(255,255,255,0.3);">29 lojas · 5 cidades · 3.213 OSs</div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.3);">3.213 entregas · 29 lojas · 5 cidades</div>
   </div>
   <div class="filter-bar">
     <span class="filter-label">Tipo:</span>
@@ -208,7 +208,7 @@ body{font-family:'Inter',sans-serif;font-size:13px;background:#0d1b2a;color:#fff
               <th>Ext.</th><th>%</th>
               <th>Remanejo</th><th>%</th>
               <th>Ret. Filial</th><th>%</th>
-              <th>R$</th><th>Mix</th>
+              <th>R$</th>
             </tr></thead>
             <tbody id="storeTbody"></tbody>
           </table>
@@ -341,7 +341,7 @@ var dailyChart = new Chart(dCtx, {
       }
     },
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:12}},
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:9},maxRotation:45,autoSkip:false,maxTicksLimit:31}},
       y:{position:'left',grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:9}}},
       y2:{position:'right',grid:{display:false},ticks:{font:{size:9},callback:function(v){return 'R$'+Math.round(v/1000)+'k';}}}
     }
@@ -395,7 +395,7 @@ function renderKPIs() {
 
   var kpis = [
     {cls:'red',    label:'TOTAL DE OSs',     value:sm.tot.toLocaleString('pt-BR'),         sub:vis.length+' lojas · '+cidades.size+' cidades',          spark:dQtd, sc:'#ff9999', filter:null},
-    {cls:'dark',   label:'VALOR TOTAL',      value:'R$ '+sm.val.toLocaleString('pt-BR'),   sub:'Ticket médio R$ '+tmedio,                                spark:dVal, sc:'#7fb3d3', filter:null},
+    {cls:'dark',   label:'VALOR GASTO COM ENTREGAS', value:'R$ '+sm.val.toLocaleString('pt-BR'),   sub:'Março 2026 · todas as cidades',  spark:dVal, sc:'#7fb3d3', filter:null},
     {cls:'green',  label:'EXTERNAS',         value:sm.ext.toLocaleString('pt-BR'),         sub:(sm.tot?(sm.ext/sm.tot*100).toFixed(1):0)+'% · clientes', spark:dQtd, sc:'#7dcea0', filter:'EXTERNA'},
     {cls:'orange', label:'REMANEJOS',        value:sm.rem.toLocaleString('pt-BR'),         sub:(sm.tot?(sm.rem/sm.tot*100).toFixed(1):0)+'% · entre lojas', spark:dQtd, sc:'#f0b27a', filter:'REMANEJO'},
     {cls:'purple', label:'RETORNO À FILIAL', value:sm.ret.toLocaleString('pt-BR'),         sub:(sm.tot?(sm.ret/sm.tot*100).toFixed(1):0)+'% · busca / receituário', spark:dQtd, sc:'#c39bd3', filter:'RETORNO'},
@@ -487,17 +487,13 @@ function renderStore() {
     var tot = ext+rem+ret;
     var rc  = d.rem_pct>=65 ? 'danger' : d.rem_pct>=50 ? 'warn' : '';
     var rtc = d.ret_pct>=30 ? 'warn' : '';
-    var mix = '<div class="mini-stack">'
-      +'<div class="mini-seg" style="width:'+d.ext_pct+'%;background:#4182E6;"></div>'
-      +'<div class="mini-seg" style="width:'+d.rem_pct+'%;background:#e67e22;"></div>'
-      +'<div class="mini-seg" style="width:'+d.ret_pct+'%;background:#8e44ad;"></div>'
-      +'</div>';
+
     html += '<tr class="'+(isSel?'row-sel':'')+(isVis?'':' row-dim')+'" onclick="toggleLoja(\''+d.loja+'\')"><td>'+d.loja+'</td>';
     html += '<td>'+cityBadge(d.cidade)+'</td><td>'+tot+'</td>';
     html += '<td style="color:#4B9EFF;">'+ext+'</td><td style="color:#4B9EFF;">'+d.ext_pct+'%</td>';
     html += '<td class="'+rc+'">'+rem+'</td><td class="'+rc+'">'+d.rem_pct+'%</td>';
     html += '<td class="'+rtc+'">'+ret+'</td><td class="'+rtc+'">'+d.ret_pct+'%</td>';
-    html += '<td>R$'+d.valor.toLocaleString('pt-BR')+'</td><td>'+mix+'</td></tr>';
+    html += '<td>R$'+d.valor.toLocaleString('pt-BR')+'</td></tr>';
   });
   document.getElementById('storeTbody').innerHTML = html;
 }
